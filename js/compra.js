@@ -33,69 +33,47 @@ function cargarEventos() {
 function procesarCompra(e) {
     e.preventDefault();
     if (compra.obtenerProductosLocalStorage().length === 0) {
-        Swal.fire({
-            type: 'error',
-            title: 'Oops...',
-            text: 'No hay productos, selecciona alguno',
-            timer: 2000,
-            showConfirmButton: false,
-            
-        }).then(function () {
-            window.location = "index.html";
-        })
+      Swal.fire({
+        type: 'error',
+        title: 'Oops...',
+        text: 'No hay productos, selecciona alguno',
+        timer: 2000,
+        showConfirmButton: false,
+      }).then(function () {
+        window.location = "index.html";
+      })
     } else if (cliente.value === '' || correo.value === '') {
-        Swal.fire({
-            type: 'error',
-            title: 'Oops...',
-            text: 'Ingrese todos los campos requeridos',
-            timer: 2000,
-            showConfirmButton: false,
-            
-        })
+      Swal.fire({
+        type: 'error',
+        title: 'Oops...',
+        text: 'Ingrese todos los campos requeridos',
+        timer: 2000,
+        showConfirmButton: false,
+      })
     } else {
-
-        //aqui se coloca el user id generado en el emailJS
-        (function () {
-            emailjs.init("THXQ296FW-6_Xhx9m");
-        })();
-
-        var myform = $("form#procesar-pago");
-
-        myform.submit((event) => {
-            event.preventDefault();
-
-        //aqui se coloca el service id y el template id generado en el emailJS
-            var service_id = "service_va77rbv";
-            var template_id = "template_4bp8g0u";
-
-            const cargandoGif = document.querySelector('#cargando');
-            cargandoGif.style.display = 'block';
-
-            const enviado = document.createElement('img');
-            enviado.src = 'img/mail.gif';
-            enviado.style.display = 'block';
-            enviado.width = '150';
-
-            emailjs.sendForm(service_id, template_id, myform[0])
-                .then(() => {
-                    cargandoGif.style.display = 'none';
-                    document.querySelector('#loaders').appendChild(enviado);
-
-                    setTimeout(() => {
-                        compra.vaciarLocalStorage();
-                        enviado.remove();
-                        window.location = "index.html";
-                    }, 2000);
-
-
-                }, (err) => {
-                    alert("Error al enviar el email\r\n Response:\n " + JSON.stringify(err));
-                    // myform.find("button").text("Send");
-                });
-
-            return false;
-
-        });
-
+      const cargandoGif = document.querySelector('#cargando');
+      cargandoGif.style.display = 'block';
+  
+      const enviado = document.createElement('img');
+      enviado.src = 'img/mail.gif';
+      enviado.style.display = 'block';
+      enviado.width = '150';
+  
+      setTimeout(() => {
+        compra.vaciarLocalStorage();
+        cargandoGif.style.display = 'none';
+        document.querySelector('#loaders').appendChild(enviado);
+        Swal.fire({
+          type: 'success',
+          title: 'Gracias por su compra!',
+          text: 'Se ha procesado su compra exitosamente',
+          timer: 4000,
+          showConfirmButton: false,
+        }).then(() => {
+          enviado.remove();
+          window.location = "index.html";
+        })
+      }, 4000);
     }
-}
+  }
+  
